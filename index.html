@@ -38,8 +38,8 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            align-items: flex-start; /* Alinha o conteúdo das notícias à esquerda */
-            text-align: left; /* Garante alinhamento do texto */
+            align-items: flex-start; /* Alinha o conteúdo à esquerda */
+            text-align: left; /* Alinha o texto à esquerda */
         }
         .news-content h2 {
             margin: 0;
@@ -131,13 +131,27 @@
             margin: 20px 0;
             color: #999;
         }
+        /* Media Query para Dispositivos Móveis */
+        @media (max-width: 768px) {
+            .news-item {
+                flex-direction: column; /* Altera para coluna no mobile */
+                align-items: flex-start; /* Alinha à esquerda */
+            }
+            .news-thumbnail {
+                width: 100%;          /* Ocupa a largura total no mobile */
+                height: auto;         /* Ajusta a altura */
+                margin-bottom: 10px;  /* Espaço abaixo da thumbnail */
+            }
+            .news-content {
+                align-items: flex-start;  /* Alinha o conteúdo à esquerda */
+                text-align: left;         /* Texto alinhado à esquerda */
+            }
+        }
     </style>
 </head>
 <body>
     <div class="news-container">
-        <div id="rss-feed">
-            <p class="loading">Carregando notícias...</p>
-        </div>
+        <div id="rss-feed"></div>
     </div>
     <footer>
         <p>© 2025 Notícias sobre IA | Desenvolvido com 💜 e 💻 pelo iaLAB | FSB Holding</p>
@@ -157,7 +171,7 @@
             "https://neofeed.com.br/feed"
         ];
         let itemsPerFeed = 5;
-        let allItems = [];
+        let loadedItems = new Set(); // Armazena URLs já exibidas
         let loading = false;
 
         async function fetchRSS(feedUrl) {
@@ -184,12 +198,12 @@
             if (loading) return;
             loading = true;
 
-            let loader = document.createElement("p");
+            const loader = document.createElement("p");
             loader.className = "loading";
             loader.textContent = "Carregando mais notícias...";
             feedContainer.appendChild(loader);
 
-            allItems = [];
+            let allItems = [];
 
             for (const url of feedUrls) {
                 const items = await fetchRSS(url);
@@ -197,13 +211,14 @@
             }
 
             allItems = allItems
-                .filter(item => item.pubDate)
+                .filter(item => item.pubDate && !loadedItems.has(item.link)) // Filtra notícias já exibidas
                 .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
 
             const itemsToDisplay = allItems.slice(0, itemsPerFeed);
-            itemsPerFeed += 5;
 
             itemsToDisplay.forEach(item => {
+                loadedItems.add(item.link); // Marca o item como carregado
+
                 const newsItem = document.createElement("div");
                 newsItem.className = "news-item";
 
