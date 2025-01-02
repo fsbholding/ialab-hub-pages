@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI NEWS</title>
+    <title>Notícias sobre Inteligência Artificial</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
@@ -95,7 +95,7 @@
         </div>
     </div>
     <footer>
-        © 2025 Notícias sobre IA | Desenvolvido com 💜 e 💻 pelo ialAB | FSB Holding
+        © 2025 Notícias sobre IA | Desenvolvido com 💜 e 💻
     </footer>
 
     <script>
@@ -169,7 +169,7 @@
 
                         const isTechReview = url.includes("technologyreview");
                         const imageUrl = isTechReview
-                            ? "https://www.technologyreview.com/wp-content/uploads/2021/02/default-hero.jpg"
+                            ? (item.thumbnail || "https://www.technologyreview.com/wp-content/uploads/2021/02/default-hero.jpg")
                             : item.thumbnail || item.enclosure?.link || "";
 
                         if (imageUrl && imageUrl.startsWith("http")) {
