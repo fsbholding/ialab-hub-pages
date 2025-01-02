@@ -100,11 +100,15 @@
 
         async function fetchPlaceholderImage(title) {
             try {
+                // Tenta buscar uma imagem relacionada ao título
                 const response = await fetch(`https://source.unsplash.com/800x400/?${encodeURIComponent(title)}`);
-                return response.url; // Retorna a URL da imagem gerada
+                if (response.ok) {
+                    return response.url;
+                }
+                throw new Error("Unsplash não retornou uma imagem válida");
             } catch (error) {
                 console.error("Erro ao buscar imagem genérica:", error);
-                return 'https://via.placeholder.com/800x400/1e1e2f/8e44ad?text=Notícia'; // Retorna uma imagem padrão caso falhe
+                return 'https://via.placeholder.com/800x400/1e1e2f/8e44ad?text=Notícia'; // Imagem padrão em caso de falha
             }
         }
 
@@ -155,8 +159,11 @@
                         const translatedTitle = await translateText(item.title);
                         const translatedDescription = await translateText(item.description.substring(0, 120));
                         
-                        // Busca de imagem
-                        const imageUrl = item.thumbnail || await fetchPlaceholderImage(translatedTitle);
+                        // Verificar se a thumbnail é válida
+                        let imageUrl = item.thumbnail;
+                        if (!imageUrl || !imageUrl.startsWith("http")) {
+                            imageUrl = await fetchPlaceholderImage(translatedTitle);
+                        }
 
                         // Criar o elemento da notícia
                         const newsItem = document.createElement("div");
@@ -181,4 +188,3 @@
     </script>
 </body>
 </html>
-
