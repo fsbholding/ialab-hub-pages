@@ -121,16 +121,21 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            padding: 12px 16px;
+            padding: 12px;
             background: #8e44ad;
             color: #fff;
             border: none;
-            border-radius: 50%;
-            font-size: 1.2rem;
+            border-radius: 10px;
+            font-size: 1rem;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
             transition: background 0.3s, transform 0.3s;
             display: none;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .back-to-top:hover {
             background: #6f3483;
@@ -267,7 +272,7 @@
         window.addEventListener("scroll", () => {
             const backToTopButton = document.getElementById("backToTop");
             if (window.scrollY > 200) {
-                backToTopButton.style.display = "block";
+                backToTopButton.style.display = "flex";
             } else {
                 backToTopButton.style.display = "none";
             }
@@ -277,4 +282,3 @@
     </script>
 </body>
 </html>
-
