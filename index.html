@@ -226,7 +226,8 @@
                 const newsItem = document.createElement("div");
                 newsItem.className = "news-item";
 
-                const thumbnailUrl = item.thumbnail || (item.enclosure && item.enclosure.link);
+                // Identificar a melhor imagem possível
+                const thumbnailUrl = item.thumbnail || (item.enclosure && item.enclosure.link) || null;
                 if (thumbnailUrl) {
                     const img = document.createElement("img");
                     img.src = thumbnailUrl;
