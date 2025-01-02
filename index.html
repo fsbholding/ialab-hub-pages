@@ -235,7 +235,9 @@
 
         function loadMoreNews() {
             itemsPerFeed += 5;
-            displayFeeds();
+            displayFeeds().then(() => {
+                document.querySelector("footer").scrollIntoView({ behavior: "smooth" });
+            });
         }
 
         displayFeeds();
