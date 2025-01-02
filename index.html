@@ -189,6 +189,18 @@
                 source.style.color = "#999";
                 content.appendChild(source);
 
+                const date = new Date(item.pubDate);
+                const formattedDate = date.toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                const dateElement = document.createElement("p");
+                dateElement.textContent = formattedDate;
+                dateElement.style.fontSize = "0.9rem";
+                dateElement.style.color = "#999";
+                content.appendChild(dateElement);
+
                 const readMore = document.createElement("a");
                 readMore.className = "read-more";
                 readMore.href = item.link;
@@ -198,14 +210,19 @@
 
                 newsItem.appendChild(content);
 
-                const isTechReview = item.link.includes("technologyreview");
                 const imageUrl = item.thumbnail && item.thumbnail.startsWith("http")
                     ? item.thumbnail
                     : (item.enclosure && item.enclosure.link && item.enclosure.link.startsWith("http"))
                     ? item.enclosure.link
                     : null;
 
-                
+                if (imageUrl) {
+                    const img = document.createElement("img");
+                    img.className = "news-thumbnail";
+                    img.src = imageUrl;
+                    img.alt = "Thumbnail";
+                    newsItem.insertBefore(img, content);
+                }
 
                 feedContainer.appendChild(newsItem);
             });
