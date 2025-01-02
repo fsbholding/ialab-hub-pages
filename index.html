@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notícias sobre Inteligência Artificial</title>
+    <title>AI NEWS</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -80,15 +81,21 @@
             font-size: 0.9rem;
             color: #555;
         }
+        .loading {
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="news-container">
-        <h1>AI Newsl</h1>
-        <div id="rss-feed"></div>
+        <h1>Notícias sobre Inteligência Artificial</h1>
+        <div id="rss-feed">
+            <p class="loading">Carregando notícias...</p>
+        </div>
     </div>
     <footer>
-        © 2025 Notícias sobre IA | Desenvolvido com 💜 e 💻 pelo iaLAB | FSB Holding
+        © 2025 Notícias sobre IA | Desenvolvido com 💜 e 💻 pelo ialAB | FSB Holding
     </footer>
 
     <script>
@@ -98,43 +105,40 @@
             return data.items || [];
         }
 
-        // Função para limpar HTML e cortar no último espaço antes do limite
         function cleanHTMLAndTrim(input, maxLength) {
-            if (!input) return ""; // Retorna vazio se não houver conteúdo
+            if (!input) return "";
             const doc = new DOMParser().parseFromString(input, 'text/html');
             const text = doc.body.textContent || "";
-            // Se o texto é menor que o limite, retorna como está
             if (text.length <= maxLength) {
                 return text;
             }
-            // Corta o texto no último espaço antes do limite
             const trimmedText = text.substring(0, maxLength).trim();
             return trimmedText.substring(0, trimmedText.lastIndexOf(" ")) + "...";
         }
 
-        // Função para gerar resumo automático caso não haja descrição
         function generateAutoSummary(title) {
             return `Leia mais sobre: ${title}`;
         }
 
         async function displayFeeds() {
             const feedUrls = [
-                "https://rss.app/feeds/6Hz47FdaZpHrlKMP.xml", // MIT Technology Review Brasil
-                "https://g1.globo.com/rss/g1/tecnologia/", // G1 Tecnologia
-                "https://www.technologyreview.com/feed/", // MIT Technology Review (Inglês)
-                "https://openai.com/blog/rss", // OpenAI Blog
-                "https://ai.googleblog.com/feeds/posts/default?alt=rss", // Google AI Blog
-                "https://hbr.org/topic/artificial-intelligence/rss", // Harvard Business Review (AI)
-                "https://techcrunch.com/tag/artificial-intelligence/feed/", // TechCrunch (AI)
-                "https://www.wired.com/category/science/artificial-intelligence/feed/" // Wired (AI)
+                "https://rss.app/feeds/6Hz47FdaZpHrlKMP.xml",
+                "https://g1.globo.com/rss/g1/tecnologia/",
+                "https://www.technologyreview.com/feed/",
+                "https://openai.com/blog/rss",
+                "https://ai.googleblog.com/feeds/posts/default?alt=rss",
+                "https://hbr.org/topic/artificial-intelligence/rss",
+                "https://techcrunch.com/tag/artificial-intelligence/feed/",
+                "https://www.wired.com/category/science/artificial-intelligence/feed/"
             ];
 
             const feedContainer = document.getElementById("rss-feed");
+            feedContainer.innerHTML = "";
+
             for (const url of feedUrls) {
                 try {
                     const items = await fetchRSS(url);
-                    for (const item of items) {
-                        // Ignora notícias sem links válidos
+                    for (const item of items.slice(0, 5)) {
                         if (!item.link || !item.link.startsWith("http")) {
                             continue;
                         }
@@ -142,31 +146,18 @@
                         const newsItem = document.createElement("div");
                         newsItem.className = "news-item";
 
-                        // Garante que imagens sejam exibidas
-                        const imageUrl = item.thumbnail || item.enclosure?.link || "";
-                        if (imageUrl && imageUrl.startsWith("http")) {
-                            const img = document.createElement("img");
-                            img.className = "news-thumbnail";
-                            img.src = imageUrl;
-                            img.alt = "Thumbnail";
-                            newsItem.appendChild(img);
-                        }
-
                         const content = document.createElement("div");
                         content.className = "news-content";
 
-                        // Adiciona o título
                         const title = document.createElement("h2");
                         title.textContent = item.title;
                         content.appendChild(title);
 
-                        // Adiciona a descrição limpa ou gera um resumo automático
                         const description = document.createElement("p");
                         const cleanDescription = cleanHTMLAndTrim(item.description, 120);
                         description.textContent = cleanDescription || generateAutoSummary(item.title);
                         content.appendChild(description);
 
-                        // Adiciona o botão "Ler mais"
                         const readMore = document.createElement("a");
                         readMore.className = "read-more";
                         readMore.href = item.link;
@@ -175,6 +166,20 @@
                         content.appendChild(readMore);
 
                         newsItem.appendChild(content);
+
+                        const isTechReview = url.includes("technologyreview");
+                        const imageUrl = isTechReview
+                            ? "https://www.technologyreview.com/wp-content/uploads/2021/02/default-hero.jpg"
+                            : item.thumbnail || item.enclosure?.link || "";
+
+                        if (imageUrl && imageUrl.startsWith("http")) {
+                            const img = document.createElement("img");
+                            img.className = "news-thumbnail";
+                            img.src = imageUrl;
+                            img.alt = "Thumbnail";
+                            newsItem.insertBefore(img, content);
+                        }
+
                         feedContainer.appendChild(newsItem);
                     }
                 } catch (error) {
@@ -187,8 +192,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
