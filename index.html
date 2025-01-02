@@ -183,6 +183,12 @@
                 description.textContent = cleanDescription || generateAutoSummary(item.title);
                 content.appendChild(description);
 
+                const source = document.createElement("p");
+                source.textContent = `Fonte: ${new URL(item.link).hostname}`;
+                source.style.fontSize = "0.9rem";
+                source.style.color = "#999";
+                content.appendChild(source);
+
                 const readMore = document.createElement("a");
                 readMore.className = "read-more";
                 readMore.href = item.link;
@@ -223,5 +229,3 @@
     </script>
 </body>
 </html>
-
-
