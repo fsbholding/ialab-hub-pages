@@ -18,30 +18,24 @@
             margin: 0 auto;
         }
         h1 {
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 2.5rem;
             color: #ffffff;
             margin-bottom: 20px;
-        }
-        .buttons {
-            display: flex;
-            justify-content: center;
             gap: 10px;
-            margin-bottom: 20px;
         }
-        .button {
-            padding: 10px 15px;
-            background: #3498db;
-            color: #fff;
+        .refresh-button {
+            background: none;
             border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s;
+            color: #ffffff;
+            font-size: 1.5rem;
+            transition: transform 0.3s;
         }
-        .button:hover {
-            background: #2980b9;
+        .refresh-button:hover {
+            transform: rotate(90deg);
         }
         .news-item {
             display: flex;
@@ -101,6 +95,23 @@
             font-size: 0.9rem;
             color: #555;
         }
+        .load-more-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background: #8e44ad;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .load-more-button:hover {
+            background: #6f3483;
+        }
         .loading {
             text-align: center;
             margin-top: 20px;
@@ -109,17 +120,17 @@
 </head>
 <body>
     <div class="news-container">
-        <h1>AI NEWS 🗞️</h1>
-        <div class="buttons">
-            <button class="button" onclick="refreshNews()">Atualizar Notícias</button>
-            <button class="button" onclick="loadMoreNews()">Carregar Mais Notícias</button>
-        </div>
+        <h1>
+            AI NEWS 🗞️ 
+            <button class="refresh-button" onclick="refreshNews()">🔄</button>
+        </h1>
         <div id="rss-feed">
             <p class="loading">Carregando notícias...</p>
         </div>
     </div>
     <footer>
-        © 2025 Notícias sobre IA | Desenvolvido com 💜 e 💻 pelo iaLAB | FSB Holding
+        <button class="load-more-button" onclick="loadMoreNews()">Carregar Mais Notícias</button>
+        <p>© 2025 Notícias sobre IA | Desenvolvido com 💜 e 💻 pelo iaLAB | FSB Holding</p>
     </footer>
 
     <script>
