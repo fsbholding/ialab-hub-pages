@@ -59,6 +59,10 @@
             color: #999;
             margin-top: 10px;
         }
+        .news-source {
+            font-size: 0.9rem;
+            color: #b0b0b0;
+        }
         .read-more {
             margin-top: 10px;
             padding: 8px 12px;
@@ -248,6 +252,11 @@
                 dateElement.className = "news-date";
                 dateElement.textContent = `Publicado em: ${date.toLocaleDateString("pt-BR")} às ${date.toLocaleTimeString("pt-BR")}`;
                 content.appendChild(dateElement);
+
+                const source = document.createElement("p");
+                source.className = "news-source";
+                source.textContent = `Fonte: ${new URL(item.link).hostname}`;
+                content.appendChild(source);
 
                 const readMore = document.createElement("a");
                 readMore.className = "read-more";
