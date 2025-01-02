@@ -38,6 +38,8 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            align-items: flex-start; /* Alinha o conteúdo das notícias à esquerda */
+            text-align: left; /* Garante alinhamento do texto */
         }
         .news-content h2 {
             margin: 0;
@@ -96,38 +98,38 @@
             height: 16px;
             margin-right: 6px;
         }
-        .load-more-button {
-            margin-top: 20px;
-            padding: 10px 15px;
+        footer {
+            text-align: center; /* Centraliza o rodapé */
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
             background: #8e44ad;
             color: #fff;
-            text-decoration: none;
             border: none;
-            border-radius: 6px;
+            border-radius: 10px;
             font-size: 1rem;
-            font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.3s, transform 0.3s;
         }
-        .load-more-button:hover {
+        .back-to-top:hover {
             background: #6f3483;
+            transform: scale(1.1);
         }
-
-        /* Media Query para Dispositivos Móveis */
-        @media (max-width: 768px) {
-            .news-item {
-                flex-direction: column; /* Altera para coluna no mobile */
-                align-items: flex-start; /* Alinha à esquerda */
-            }
-            .news-thumbnail {
-                width: 100%;          /* Ocupa a largura total */
-                height: auto;         /* Ajusta altura automaticamente */
-                margin-bottom: 10px;  /* Adiciona espaço abaixo da thumbnail */
-            }
-            .news-content {
-                align-items: flex-start;  /* Alinha à esquerda no mobile */
-                text-align: left;         /* Texto alinhado à esquerda */
-            }
+        .loading {
+            text-align: center;
+            margin: 20px 0;
+            color: #999;
         }
     </style>
 </head>
@@ -138,9 +140,9 @@
         </div>
     </div>
     <footer>
-        <button class="load-more-button" onclick="loadMoreNews()">Carregar Mais Notícias</button>
         <p>© 2025 Notícias sobre IA | Desenvolvido com 💜 e 💻 pelo iaLAB | FSB Holding</p>
     </footer>
+    <button id="backToTop" class="back-to-top" onclick="scrollToTop()">↑</button>
 
     <script>
         const feedUrls = [
@@ -156,6 +158,7 @@
         ];
         let itemsPerFeed = 5;
         let allItems = [];
+        let loading = false;
 
         async function fetchRSS(feedUrl) {
             try {
@@ -177,7 +180,14 @@
 
         async function displayFeeds() {
             const feedContainer = document.getElementById("rss-feed");
-            feedContainer.innerHTML = "<p class='loading'>Carregando notícias...</p>";
+
+            if (loading) return;
+            loading = true;
+
+            let loader = document.createElement("p");
+            loader.className = "loading";
+            loader.textContent = "Carregando mais notícias...";
+            feedContainer.appendChild(loader);
 
             allItems = [];
 
@@ -191,7 +201,7 @@
                 .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
 
             const itemsToDisplay = allItems.slice(0, itemsPerFeed);
-            feedContainer.innerHTML = "";
+            itemsPerFeed += 5;
 
             itemsToDisplay.forEach(item => {
                 const newsItem = document.createElement("div");
@@ -239,14 +249,31 @@
                 newsItem.appendChild(content);
                 feedContainer.appendChild(newsItem);
             });
+
+            loader.remove();
+            loading = false;
         }
 
-        function loadMoreNews() {
-            itemsPerFeed += 5;
-            displayFeeds().then(() => {
-                document.querySelector("footer").scrollIntoView({ behavior: "smooth" });
-            });
+        function handleScroll() {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+                displayFeeds();
+            }
         }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        window.addEventListener("scroll", handleScroll);
+
+        window.addEventListener("scroll", () => {
+            const backToTopButton = document.getElementById("backToTop");
+            if (window.scrollY > 200) {
+                backToTopButton.style.display = "flex";
+            } else {
+                backToTopButton.style.display = "none";
+            }
+        });
 
         displayFeeds();
     </script>
