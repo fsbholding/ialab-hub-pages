@@ -21,7 +21,27 @@
             text-align: center;
             font-size: 2.5rem;
             color: #ffffff;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .button {
+            padding: 10px 15px;
+            background: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background: #2980b9;
         }
         .news-item {
             display: flex;
@@ -90,15 +110,32 @@
 <body>
     <div class="news-container">
         <h1>AI NEWS 🗞️</h1>
+        <div class="buttons">
+            <button class="button" onclick="refreshNews()">Atualizar Notícias</button>
+            <button class="button" onclick="loadMoreNews()">Carregar Mais Notícias</button>
+        </div>
         <div id="rss-feed">
             <p class="loading">Carregando notícias...</p>
         </div>
     </div>
     <footer>
-        © 2025 Notícias sobre IA | Desenvolvido com 💜 e 💻 pelo iaLAB| FSB Holding
+        © 2025 Notícias sobre IA | Desenvolvido com 💜 e 💻 pelo iaLAB | FSB Holding
     </footer>
 
     <script>
+        let feedUrls = [
+            "https://rss.app/feeds/6Hz47FdaZpHrlKMP.xml",
+            "https://g1.globo.com/rss/g1/tecnologia/",
+            "https://www.technologyreview.com/feed/",
+            "https://openai.com/blog/rss",
+            "https://ai.googleblog.com/feeds/posts/default?alt=rss",
+            "https://hbr.org/topic/artificial-intelligence/rss",
+            "https://techcrunch.com/tag/artificial-intelligence/feed/",
+            "https://www.wired.com/category/science/artificial-intelligence/feed/",
+            "https://neofeed.com.br/feed"
+        ];
+        let itemsPerFeed = 5;
+
         async function fetchRSS(feedUrl) {
             const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}`);
             const data = await response.json();
@@ -121,25 +158,13 @@
         }
 
         async function displayFeeds() {
-            const feedUrls = [
-                "https://rss.app/feeds/6Hz47FdaZpHrlKMP.xml",
-                "https://g1.globo.com/rss/g1/tecnologia/",
-                "https://www.technologyreview.com/feed/",
-                "https://openai.com/blog/rss",
-                "https://ai.googleblog.com/feeds/posts/default?alt=rss",
-                "https://hbr.org/topic/artificial-intelligence/rss",
-                "https://techcrunch.com/tag/artificial-intelligence/feed/",
-                "https://www.wired.com/category/science/artificial-intelligence/feed/",
-                "https://neofeed.com.br/feed"
-            ];
-
             const feedContainer = document.getElementById("rss-feed");
             feedContainer.innerHTML = "";
 
             for (const url of feedUrls) {
                 try {
                     const items = await fetchRSS(url);
-                    for (const item of items.slice(0, 5)) {
+                    for (const item of items.slice(0, itemsPerFeed)) {
                         if (!item.link || !item.link.startsWith("http")) {
                             continue;
                         }
@@ -189,8 +214,17 @@
             }
         }
 
+        function refreshNews() {
+            itemsPerFeed = 5;
+            displayFeeds();
+        }
+
+        function loadMoreNews() {
+            itemsPerFeed += 5;
+            displayFeeds();
+        }
+
         displayFeeds();
     </script>
 </body>
 </html>
-
