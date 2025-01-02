@@ -98,6 +98,12 @@
             return data.items || [];
         }
 
+        // Função para remover tags HTML
+        function cleanHTML(input) {
+            const doc = new DOMParser().parseFromString(input, 'text/html');
+            return doc.body.textContent || "";
+        }
+
         async function displayFeeds() {
             const feedUrls = [
                 "https://rss.app/feeds/6Hz47FdaZpHrlKMP.xml", // MIT Technology Review Brasil
@@ -140,9 +146,9 @@
                         title.textContent = item.title;
                         content.appendChild(title);
 
-                        // Adiciona a descrição
+                        // Adiciona a descrição limpa
                         const description = document.createElement("p");
-                        description.textContent = item.description?.substring(0, 120) || "Sem descrição disponível...";
+                        description.textContent = cleanHTML(item.description?.substring(0, 120) || "Sem descrição disponível...");
                         content.appendChild(description);
 
                         // Adiciona o botão "Ler mais"
@@ -166,6 +172,7 @@
     </script>
 </body>
 </html>
+
 
 
 
