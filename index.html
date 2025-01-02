@@ -39,7 +39,7 @@
         }
         .news-thumbnail {
             width: 100%;
-            height: 200px;
+            max-height: 200px;
             object-fit: cover;
             border-radius: 8px;
         }
@@ -73,6 +73,11 @@
         }
         .read-more:hover {
             background: #2980b9;
+        }
+        .no-link {
+            color: #ff4d4d;
+            font-size: 0.9rem;
+            margin-top: 10px;
         }
         footer {
             text-align: center;
@@ -140,7 +145,7 @@
                         description.textContent = item.description?.substring(0, 120) || "Sem descrição disponível...";
                         content.appendChild(description);
 
-                        // Adiciona o botão "Ler mais" somente se o link for válido
+                        // Adiciona o botão "Ler mais" ou mensagem "Sem link disponível"
                         if (item.link && item.link.startsWith("http")) {
                             const readMore = document.createElement("a");
                             readMore.className = "read-more";
@@ -148,6 +153,11 @@
                             readMore.target = "_blank";
                             readMore.textContent = "Ler mais";
                             content.appendChild(readMore);
+                        } else {
+                            const noLink = document.createElement("p");
+                            noLink.className = "no-link";
+                            noLink.textContent = "Link indisponível";
+                            content.appendChild(noLink);
                         }
 
                         newsItem.appendChild(content);
@@ -163,4 +173,5 @@
     </script>
 </body>
 </html>
+
 
