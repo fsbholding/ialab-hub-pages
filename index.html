@@ -123,8 +123,7 @@
 <body>
     <div class="news-container">
         <div class="header">
-            <h1>AI NEWS 🗞️</h1>
-            <button class="refresh-button" onclick="refreshNews()">🔄</button>
+            
         </div>
         <div id="rss-feed">
             <p class="loading">Carregando notícias...</p>
@@ -221,8 +220,12 @@
 
                 const isTechReview = item.link.includes("technologyreview");
                 const imageUrl = isTechReview
-                    ? (item.thumbnail || item.enclosure?.link || item.media?.content?.url || "https://www.technologyreview.com/wp-content/uploads/2021/02/default-hero.jpg")
-                    : item.thumbnail || item.enclosure?.link || "";
+                    ? (item.thumbnail && await validateImageURL(item.thumbnail))
+                        ? item.thumbnail
+                        : "https://www.technologyreview.com/wp-content/uploads/2021/02/default-hero.jpg"
+                    : (item.thumbnail && await validateImageURL(item.thumbnail))
+                        ? item.thumbnail
+                        : "https://via.placeholder.com/800x200?text=No+Image+Available";
 
                 if (imageUrl && imageUrl.startsWith("http")) {
                     const img = document.createElement("img");
@@ -243,9 +246,13 @@
 
         function loadMoreNews() {
             itemsPerFeed += 5;
-            displayFeeds();
-            setTimeout(() => {
-                document.querySelector('footer').scrollIntoView({ behavior: 'smooth' });
+            displayFeeds().then(() => {
+                const lastNewsItem = document.querySelector(".news-item:last-child");
+                if (lastNewsItem) {
+                    lastNewsItem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
             }, 100);
         }
 
@@ -253,4 +260,3 @@
     </script>
 </body>
 </html>
-
