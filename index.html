@@ -1,13 +1,90 @@
-.load-more-button {
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI NEWS 🗞️</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        .news-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .news-item {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #1e1e2f;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .news-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.7);
+        }
+        .news-thumbnail {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .news-content {
+            padding: 10px 0;
+        }
+        .news-content h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #8e44ad, #3498db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .news-content p {
+            margin: 8px 0;
+            font-size: 1rem;
+            color: #b0b0b0;
+        }
+        .read-more {
             display: inline-block;
             margin-top: 10px;
-            padding: 8px 12px;
+            padding: 10px 15px;
+            background: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .read-more:hover {
+            background: #2980b9;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .load-more-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
             background: #8e44ad;
             color: #fff;
             text-decoration: none;
             border: none;
             border-radius: 6px;
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
             transition: background 0.3s;
@@ -112,43 +189,23 @@
                 source.style.color = "#999";
                 content.appendChild(source);
 
-                const date = new Date(item.pubDate);
-                const formattedDate = date.toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                });
-                const dateElement = document.createElement("p");
-                dateElement.textContent = formattedDate;
-                dateElement.style.fontSize = "0.9rem";
-                dateElement.style.color = "#999";
-                content.appendChild(dateElement);
-
                 const readMore = document.createElement("a");
                 readMore.className = "read-more";
                 readMore.href = item.link;
                 readMore.target = "_blank";
-                readMore.rel = "noopener noreferrer";
                 readMore.textContent = "Ler mais";
                 content.appendChild(readMore);
 
                 newsItem.appendChild(content);
 
+                const isTechReview = item.link.includes("technologyreview");
                 const imageUrl = item.thumbnail && item.thumbnail.startsWith("http")
                     ? item.thumbnail
                     : (item.enclosure && item.enclosure.link && item.enclosure.link.startsWith("http"))
                     ? item.enclosure.link
-                    : (item.media && item.media.content && item.media.content.startsWith("http"))
-                    ? item.media.content
                     : null;
 
-                if (imageUrl) {
-                    const img = document.createElement("img");
-                    img.className = "news-thumbnail";
-                    img.src = imageUrl;
-                    img.alt = "Thumbnail";
-                    newsItem.insertBefore(img, content);
-                }
+                
 
                 feedContainer.appendChild(newsItem);
             });
