@@ -17,28 +17,6 @@
             max-width: 800px;
             margin: 0 auto;
         }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .header h1 {
-            font-size: 2.5rem;
-            color: #ffffff;
-            margin: 0;
-        }
-        .refresh-button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #ffffff;
-            font-size: 1.5rem;
-            transition: transform 0.3s;
-        }
-        .refresh-button:hover {
-            transform: rotate(90deg);
-        }
         .news-item {
             display: flex;
             flex-direction: column;
@@ -122,9 +100,6 @@
 </head>
 <body>
     <div class="news-container">
-        <div class="header">
-            
-        </div>
         <div id="rss-feed">
             <p class="loading">Carregando notícias...</p>
         </div>
@@ -184,7 +159,6 @@
                 }
             }
 
-            // Ordenar por data de publicação
             allItems = allItems.filter(item => item.pubDate).sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
 
             const itemsToDisplay = allItems.slice(0, itemsPerFeed);
@@ -220,14 +194,10 @@
 
                 const isTechReview = item.link.includes("technologyreview");
                 const imageUrl = isTechReview
-                    ? (item.thumbnail && await validateImageURL(item.thumbnail))
-                        ? item.thumbnail
-                        : "https://www.technologyreview.com/wp-content/uploads/2021/02/default-hero.jpg"
-                    : (item.thumbnail && await validateImageURL(item.thumbnail))
-                        ? item.thumbnail
-                        : "https://via.placeholder.com/800x200?text=No+Image+Available";
+                    ? item.thumbnail || "https://www.technologyreview.com/wp-content/uploads/2021/02/default-hero.jpg"
+                    : item.thumbnail || "https://via.placeholder.com/800x200?text=No+Image+Available";
 
-                if (imageUrl && imageUrl.startsWith("http")) {
+                if (imageUrl) {
                     const img = document.createElement("img");
                     img.className = "news-thumbnail";
                     img.src = imageUrl;
@@ -239,11 +209,6 @@
             });
         }
 
-        function refreshNews() {
-            itemsPerFeed = 5;
-            displayFeeds();
-        }
-
         function loadMoreNews() {
             itemsPerFeed += 5;
             displayFeeds().then(() => {
@@ -252,12 +217,11 @@
                     lastNewsItem.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             });
-        });
-            }, 100);
         }
 
         displayFeeds();
     </script>
 </body>
 </html>
+
 
