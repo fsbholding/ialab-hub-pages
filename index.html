@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notícias do MIT Technology Review Brasil</title>
+    <title>Notícias sobre Inteligência Artificial</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -84,11 +84,11 @@
 </head>
 <body>
     <div class="news-container">
-        <h1>Notícias do MIT Technology Review Brasil</h1>
+        <h1>Notícias sobre Inteligência Artificial</h1>
         <div id="rss-feed"></div>
     </div>
     <footer>
-        © 2025 Notícias do MIT | Desenvolvido com 💜 e 💻
+        © 2025 Notícias sobre IA | Desenvolvido com 💜 e 💻
     </footer>
 
     <script>
@@ -99,35 +99,46 @@
         }
 
         async function displayFeeds() {
-            const feedUrl = "https://rss.app/feeds/6Hz47FdaZpHrlKMP.xml"; // Feed do MIT Technology Review Brasil
+            const feedUrls = [
+                "https://rss.app/feeds/6Hz47FdaZpHrlKMP.xml", // MIT Technology Review Brasil
+                "https://g1.globo.com/rss/g1/tecnologia/", // G1 Tecnologia
+                "https://www.technologyreview.com/feed/", // MIT Technology Review (Inglês)
+                "https://openai.com/blog/rss", // OpenAI Blog
+                "https://ai.googleblog.com/feeds/posts/default?alt=rss", // Google AI Blog
+                "https://hbr.org/topic/artificial-intelligence/rss", // Harvard Business Review (AI)
+                "https://techcrunch.com/tag/artificial-intelligence/feed/", // TechCrunch (AI)
+                "https://www.wired.com/category/science/artificial-intelligence/feed/" // Wired (AI)
+            ];
+
             const feedContainer = document.getElementById("rss-feed");
+            for (const url of feedUrls) {
+                try {
+                    const items = await fetchRSS(url);
+                    for (const item of items) {
+                        const newsItem = document.createElement("div");
+                        newsItem.className = "news-item";
 
-            try {
-                const items = await fetchRSS(feedUrl);
-                for (const item of items) {
-                    const newsItem = document.createElement("div");
-                    newsItem.className = "news-item";
+                        // Apenas exibe a thumbnail se estiver disponível
+                        if (item.thumbnail && item.thumbnail.startsWith("http")) {
+                            const thumbnail = document.createElement("img");
+                            thumbnail.src = item.thumbnail;
+                            thumbnail.className = "news-thumbnail";
+                            thumbnail.alt = "Thumbnail";
+                            newsItem.appendChild(thumbnail);
+                        }
 
-                    // Apenas exibe a thumbnail se estiver disponível
-                    if (item.thumbnail && item.thumbnail.startsWith("http")) {
-                        const thumbnail = document.createElement("img");
-                        thumbnail.src = item.thumbnail;
-                        thumbnail.className = "news-thumbnail";
-                        thumbnail.alt = "Thumbnail";
-                        newsItem.appendChild(thumbnail);
+                        newsItem.innerHTML += `
+                            <div class="news-content">
+                                <h2>${item.title}</h2>
+                                <p>${item.description?.substring(0, 120) || "Sem descrição disponível"}...</p>
+                                <a href="${item.link}" target="_blank" class="read-more">Ler mais</a>
+                            </div>
+                        `;
+                        feedContainer.appendChild(newsItem);
                     }
-
-                    newsItem.innerHTML += `
-                        <div class="news-content">
-                            <h2>${item.title}</h2>
-                            <p>${item.description?.substring(0, 120) || "Sem descrição disponível"}...</p>
-                            <a href="${item.link}" target="_blank" class="read-more">Ler mais</a>
-                        </div>
-                    `;
-                    feedContainer.appendChild(newsItem);
+                } catch (error) {
+                    console.error("Erro ao carregar feed RSS:", error);
                 }
-            } catch (error) {
-                console.error("Erro ao carregar feed RSS:", error);
             }
         }
 
@@ -135,5 +146,3 @@
     </script>
 </body>
 </html>
-
-
