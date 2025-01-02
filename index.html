@@ -236,51 +236,6 @@
             });
         }
 
-                        const newsItem = document.createElement("div");
-                        newsItem.className = "news-item";
-
-                        const content = document.createElement("div");
-                        content.className = "news-content";
-
-                        const title = document.createElement("h2");
-                        title.textContent = item.title;
-                        content.appendChild(title);
-
-                        const description = document.createElement("p");
-                        const cleanDescription = cleanHTMLAndTrim(item.description, 120);
-                        description.textContent = cleanDescription || generateAutoSummary(item.title);
-                        content.appendChild(description);
-
-                        const readMore = document.createElement("a");
-                        readMore.className = "read-more";
-                        readMore.href = item.link;
-                        readMore.target = "_blank";
-                        readMore.textContent = "Ler mais";
-                        content.appendChild(readMore);
-
-                        newsItem.appendChild(content);
-
-                        const isTechReview = url.includes("technologyreview");
-                        const imageUrl = isTechReview
-                            ? (item.thumbnail || item.enclosure?.link || item.media?.content?.url || "https://www.technologyreview.com/wp-content/uploads/2021/02/default-hero.jpg")
-                            : item.thumbnail || item.enclosure?.link || "";
-
-                        if (imageUrl && imageUrl.startsWith("http")) {
-                            const img = document.createElement("img");
-                            img.className = "news-thumbnail";
-                            img.src = imageUrl;
-                            img.alt = "Thumbnail";
-                            newsItem.insertBefore(img, content);
-                        }
-
-                        feedContainer.appendChild(newsItem);
-                    }
-                } catch (error) {
-                    console.error("Erro ao carregar feed RSS:", error);
-                }
-            }
-        }
-
         function refreshNews() {
             itemsPerFeed = 5;
             displayFeeds();
