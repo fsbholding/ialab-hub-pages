@@ -17,18 +17,44 @@
             margin: 0 auto;
         }
         .news-item {
+            display: flex;
+            gap: 15px;
             margin-bottom: 20px;
             padding: 15px;
             background: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        .news-item a {
-            text-decoration: none;
-            color: #007BFF;
+        .news-thumbnail {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
         }
-        .news-item a:hover {
-            text-decoration: underline;
+        .news-content {
+            flex: 1;
+        }
+        .news-item h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+        .news-item p {
+            margin: 8px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .read-more {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #007BFF;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .read-more:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -88,15 +114,20 @@
                 try {
                     const items = await fetchRSS(url);
                     for (const item of items) {
+                        // Tradução dos campos
                         const translatedTitle = await translateText(item.title);
-                        const translatedDescription = await translateText(item.description.substring(0, 150));
+                        const translatedDescription = await translateText(item.description.substring(0, 120));
 
+                        // Criar o elemento da notícia
                         const newsItem = document.createElement("div");
                         newsItem.className = "news-item";
                         newsItem.innerHTML = `
-                            <h2><a href="${item.link}" target="_blank">${translatedTitle}</a></h2>
-                            <p><strong>Publicado em:</strong> ${item.pubDate}</p>
-                            <p>${translatedDescription}...</p>
+                            <img class="news-thumbnail" src="${item.thumbnail || 'https://via.placeholder.com/120'}" alt="Thumbnail">
+                            <div class="news-content">
+                                <h2>${translatedTitle}</h2>
+                                <p>${translatedDescription}...</p>
+                                <a href="${item.link}" target="_blank" class="read-more">Ler mais</a>
+                            </div>
                         `;
                         feedContainer.appendChild(newsItem);
                     }
@@ -110,4 +141,5 @@
     </script>
 </body>
 </html>
+
 
