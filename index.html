@@ -208,7 +208,7 @@
 
                         const isTechReview = url.includes("technologyreview");
                         const imageUrl = isTechReview
-                            ? (item.thumbnail || "https://www.technologyreview.com/wp-content/uploads/2021/02/default-hero.jpg")
+                            ? (item.thumbnail || item.enclosure?.link || item.media?.content?.url || "https://www.technologyreview.com/wp-content/uploads/2021/02/default-hero.jpg")
                             : item.thumbnail || item.enclosure?.link || "";
 
                         if (imageUrl && imageUrl.startsWith("http")) {
