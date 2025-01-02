@@ -117,6 +117,25 @@
             font-size: 0.9rem;
             color: #555;
         }
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 16px;
+            background: #8e44ad;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s, transform 0.3s;
+            display: none;
+        }
+        .back-to-top:hover {
+            background: #6f3483;
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
@@ -129,6 +148,7 @@
         <button class="load-more-button" onclick="loadMoreNews()">Carregar Mais Notícias</button>
         <p>© 2025 Notícias sobre IA | Desenvolvido com 💜 e 💻 pelo iaLAB | FSB Holding</p>
     </footer>
+    <button id="backToTop" class="back-to-top" onclick="scrollToTop()">↑</button>
 
     <script>
         const feedUrls = [
@@ -240,7 +260,21 @@
             });
         }
 
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        window.addEventListener("scroll", () => {
+            const backToTopButton = document.getElementById("backToTop");
+            if (window.scrollY > 200) {
+                backToTopButton.style.display = "block";
+            } else {
+                backToTopButton.style.display = "none";
+            }
+        });
+
         displayFeeds();
     </script>
 </body>
 </html>
+
