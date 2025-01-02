@@ -118,20 +118,39 @@
                         const newsItem = document.createElement("div");
                         newsItem.className = "news-item";
 
-                        // Apenas exibe a thumbnail se estiver disponível
+                        // Exibe a thumbnail apenas se existir e não duplicar
                         if (item.thumbnail && item.thumbnail.startsWith("http")) {
-                            newsItem.innerHTML += `
-                                <img class="news-thumbnail" src="${item.thumbnail}" alt="Thumbnail">
-                            `;
+                            const img = document.createElement("img");
+                            img.className = "news-thumbnail";
+                            img.src = item.thumbnail;
+                            img.alt = "Thumbnail";
+                            newsItem.appendChild(img);
                         }
 
-                        newsItem.innerHTML += `
-                            <div class="news-content">
-                                <h2>${item.title}</h2>
-                                <p>${item.description?.substring(0, 120) || "Sem descrição disponível"}...</p>
-                                <a href="${item.link}" target="_blank" class="read-more">Ler mais</a>
-                            </div>
-                        `;
+                        const content = document.createElement("div");
+                        content.className = "news-content";
+
+                        // Adiciona o título
+                        const title = document.createElement("h2");
+                        title.textContent = item.title;
+                        content.appendChild(title);
+
+                        // Adiciona a descrição
+                        const description = document.createElement("p");
+                        description.textContent = item.description?.substring(0, 120) || "Sem descrição disponível...";
+                        content.appendChild(description);
+
+                        // Adiciona o botão "Ler mais" somente se o link for válido
+                        if (item.link && item.link.startsWith("http")) {
+                            const readMore = document.createElement("a");
+                            readMore.className = "read-more";
+                            readMore.href = item.link;
+                            readMore.target = "_blank";
+                            readMore.textContent = "Ler mais";
+                            content.appendChild(readMore);
+                        }
+
+                        newsItem.appendChild(content);
                         feedContainer.appendChild(newsItem);
                     }
                 } catch (error) {
@@ -144,3 +163,4 @@
     </script>
 </body>
 </html>
+
