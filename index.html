@@ -74,11 +74,6 @@
         .read-more:hover {
             background: #2980b9;
         }
-        .no-link {
-            color: #ff4d4d;
-            font-size: 0.9rem;
-            margin-top: 10px;
-        }
         footer {
             text-align: center;
             margin-top: 40px;
@@ -120,6 +115,11 @@
                 try {
                     const items = await fetchRSS(url);
                     for (const item of items) {
+                        // Ignora notícias sem links válidos
+                        if (!item.link || !item.link.startsWith("http")) {
+                            continue;
+                        }
+
                         const newsItem = document.createElement("div");
                         newsItem.className = "news-item";
 
@@ -145,20 +145,13 @@
                         description.textContent = item.description?.substring(0, 120) || "Sem descrição disponível...";
                         content.appendChild(description);
 
-                        // Adiciona o botão "Ler mais" ou mensagem "Sem link disponível"
-                        if (item.link && item.link.startsWith("http")) {
-                            const readMore = document.createElement("a");
-                            readMore.className = "read-more";
-                            readMore.href = item.link;
-                            readMore.target = "_blank";
-                            readMore.textContent = "Ler mais";
-                            content.appendChild(readMore);
-                        } else {
-                            const noLink = document.createElement("p");
-                            noLink.className = "no-link";
-                            noLink.textContent = "Link indisponível";
-                            content.appendChild(noLink);
-                        }
+                        // Adiciona o botão "Ler mais"
+                        const readMore = document.createElement("a");
+                        readMore.className = "read-more";
+                        readMore.href = item.link;
+                        readMore.target = "_blank";
+                        readMore.textContent = "Ler mais";
+                        content.appendChild(readMore);
 
                         newsItem.appendChild(content);
                         feedContainer.appendChild(newsItem);
@@ -173,5 +166,6 @@
     </script>
 </body>
 </html>
+
 
 
