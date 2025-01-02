@@ -98,10 +98,23 @@
             return data.items || [];
         }
 
-        // Função para remover tags HTML
-        function cleanHTML(input) {
+        // Função para limpar HTML e cortar no último espaço antes do limite
+        function cleanHTMLAndTrim(input, maxLength) {
+            if (!input) return ""; // Retorna vazio se não houver conteúdo
             const doc = new DOMParser().parseFromString(input, 'text/html');
-            return doc.body.textContent || "";
+            const text = doc.body.textContent || "";
+            // Se o texto é menor que o limite, retorna como está
+            if (text.length <= maxLength) {
+                return text;
+            }
+            // Corta o texto no último espaço antes do limite
+            const trimmedText = text.substring(0, maxLength).trim();
+            return trimmedText.substring(0, trimmedText.lastIndexOf(" ")) + "...";
+        }
+
+        // Função para gerar resumo automático caso não haja descrição
+        function generateAutoSummary(title) {
+            return `Leia mais sobre: ${title}`;
         }
 
         async function displayFeeds() {
@@ -129,11 +142,12 @@
                         const newsItem = document.createElement("div");
                         newsItem.className = "news-item";
 
-                        // Exibe a thumbnail apenas se existir e não duplicar
-                        if (item.thumbnail && item.thumbnail.startsWith("http")) {
+                        // Garante que imagens sejam exibidas
+                        const imageUrl = item.thumbnail || item.enclosure?.link || "";
+                        if (imageUrl && imageUrl.startsWith("http")) {
                             const img = document.createElement("img");
                             img.className = "news-thumbnail";
-                            img.src = item.thumbnail;
+                            img.src = imageUrl;
                             img.alt = "Thumbnail";
                             newsItem.appendChild(img);
                         }
@@ -146,9 +160,10 @@
                         title.textContent = item.title;
                         content.appendChild(title);
 
-                        // Adiciona a descrição limpa
+                        // Adiciona a descrição limpa ou gera um resumo automático
                         const description = document.createElement("p");
-                        description.textContent = cleanHTML(item.description?.substring(0, 120) || "Sem descrição disponível...");
+                        const cleanDescription = cleanHTMLAndTrim(item.description, 120);
+                        description.textContent = cleanDescription || generateAutoSummary(item.title);
                         content.appendChild(description);
 
                         // Adiciona o botão "Ler mais"
@@ -172,6 +187,7 @@
     </script>
 </body>
 </html>
+
 
 
 
