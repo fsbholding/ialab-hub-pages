@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI NEWS 🗞️</title>
-    <link rel="stylesheet" href="styles.css">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -132,7 +131,7 @@
     </footer>
 
     <script>
-        let feedUrls = [
+        const feedUrls = [
             "https://rss.app/feeds/6Hz47FdaZpHrlKMP.xml",
             "https://g1.globo.com/rss/g1/tecnologia/",
             "https://www.technologyreview.com/feed/",
@@ -161,11 +160,7 @@
             if (!input) return "";
             const doc = new DOMParser().parseFromString(input, "text/html");
             const text = doc.body.textContent || "";
-            if (text.length <= maxLength) {
-                return text.trim();
-            }
-            const trimmedText = text.substring(0, maxLength).trim();
-            return trimmedText.substring(0, trimmedText.lastIndexOf(" ")) + "...";
+            return text.length <= maxLength ? text.trim() : `${text.substring(0, maxLength).trim()}...`;
         }
 
         async function displayFeeds() {
@@ -221,6 +216,7 @@
                 readMore.className = "read-more";
                 readMore.href = item.link;
                 readMore.target = "_blank";
+                readMore.rel = "noopener noreferrer";
                 readMore.textContent = "Ler mais";
                 content.appendChild(readMore);
 
@@ -228,6 +224,7 @@
                 shareButton.className = "linkedin-button";
                 shareButton.href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(item.link)}&title=${encodeURIComponent(item.title)}`;
                 shareButton.target = "_blank";
+                shareButton.rel = "noopener noreferrer";
                 shareButton.innerHTML = `<img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn">Compartilhar no LinkedIn`;
                 content.appendChild(shareButton);
 
