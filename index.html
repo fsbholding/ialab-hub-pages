@@ -199,17 +199,13 @@
                 newsItem.appendChild(content);
 
                 const isTechReview = item.link.includes("technologyreview");
-                const imageUrl = isTechReview
-                    ? item.thumbnail || "https://www.technologyreview.com/wp-content/uploads/2021/02/default-hero.jpg"
-                    : item.thumbnail || "https://via.placeholder.com/800x200?text=No+Image+Available";
+                const imageUrl = item.thumbnail && item.thumbnail.startsWith("http")
+                    ? item.thumbnail
+                    : (item.enclosure && item.enclosure.link && item.enclosure.link.startsWith("http"))
+                    ? item.enclosure.link
+                    : null;
 
-                if (imageUrl) {
-                    const img = document.createElement("img");
-                    img.className = "news-thumbnail";
-                    img.src = imageUrl;
-                    img.alt = "Thumbnail";
-                    newsItem.insertBefore(img, content);
-                }
+                
 
                 feedContainer.appendChild(newsItem);
             });
