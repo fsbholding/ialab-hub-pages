@@ -186,7 +186,7 @@
             }
 
             // Ordenar por data de publicação
-            allItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+            allItems = allItems.filter(item => item.pubDate).sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
 
             const itemsToDisplay = allItems.slice(0, itemsPerFeed);
 
@@ -298,5 +298,3 @@
     </script>
 </body>
 </html>
-
-
