@@ -166,7 +166,7 @@
                             <div class="news-content">
                                 <h2>${translatedTitle}</h2>
                                 <p>${translatedDescription}...</p>
-                                <a href="${item.link}" target="_blank" class="read-more">Ler mais</a>
+                                ${item.link ? `<a href="${item.link}" target="_blank" class="read-more">Ler mais</a>` : `<p style="color: #ff4d4d;">Link indisponível</p>`}
                             </div>
                         `;
                         feedContainer.appendChild(newsItem);
@@ -181,3 +181,4 @@
     </script>
 </body>
 </html>
+
