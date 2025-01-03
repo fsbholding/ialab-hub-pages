@@ -226,7 +226,6 @@
                 const newsItem = document.createElement("div");
                 newsItem.className = "news-item";
 
-                // Identificar a melhor imagem possível
                 const thumbnailUrl = item.thumbnail || (item.enclosure && item.enclosure.link) || null;
                 if (thumbnailUrl) {
                     const img = document.createElement("img");
@@ -268,6 +267,7 @@
                 const shareButton = document.createElement("a");
                 shareButton.className = "linkedin-button";
                 shareButton.href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(item.link)}&title=${encodeURIComponent(item.title)}`;
+                shareButton.target = "_blank"; // Abre em uma nova guia
                 shareButton.innerHTML = `<img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn">Compartilhar no LinkedIn`;
                 content.appendChild(shareButton);
 
